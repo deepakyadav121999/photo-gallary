@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../Styles/HomePage.css';
 import { BiSolidLike } from 'react-icons/bi';
-import { CiInstagram } from 'react-icons/ci';
-import { CiTwitter } from 'react-icons/ci';
+
+import { FiTwitter } from 'react-icons/fi';
+import {BsInstagram } from 'react-icons/bs';
 
 
 const HomePage = () => {
@@ -183,12 +184,12 @@ const HomePage = () => {
             </div>
             <div className="user-id2">
               <p className=''>
-                <CiInstagram />/{discription.instagram}
+                <BsInstagram />/{discription.instagram}
               </p>
             </div>
             <div className="twitter-link">
               <p className="user-id2">
-                <CiTwitter />/{discription.twitter}
+                <FiTwitter />/{discription.twitter}
               </p>
             </div>
           </div>
