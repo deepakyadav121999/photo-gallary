@@ -141,7 +141,7 @@ const HomePage = () => {
                         />
                         <div className="user-id">
                           <p>{`${image.user.first_name} ${image.user.last_name}`}</p>
-                          <p className="user-id1">@{image.user.username}</p>
+                         {image.user.username&& <p className="user-id1">@{image.user.username}</p>}
                         </div>
                       </div>
                       <div className="likes">
