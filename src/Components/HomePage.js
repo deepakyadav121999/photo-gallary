@@ -63,6 +63,8 @@ setloading(false)
   useEffect(() => {
     api();
   }, []);
+
+
 useEffect(()=>{
   setloading(true)
 apiCall()
@@ -127,7 +129,9 @@ setloading(false)
 
 
 
-   {loading?<Skeleton variant="rectangular" width={210} height={100} />: <div className="screen">
+   {loading?(<Skeleton variant="rectangular" width={210} height={250} />
+ 
+   ): <div className="screen">
           {searchData &&
             searchData.map((image,index) => {
               return (
