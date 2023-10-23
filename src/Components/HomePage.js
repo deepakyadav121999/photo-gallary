@@ -5,6 +5,8 @@ import { BiSolidLike } from 'react-icons/bi';
 
 import { FiTwitter } from 'react-icons/fi';
 import {BsInstagram } from 'react-icons/bs';
+import { Skeleton } from '@mui/material';
+
 
 
 const HomePage = () => {
@@ -27,34 +29,48 @@ const HomePage = () => {
   });
   const [hidden, setHidden] = useState('non-hidden');
   const [pophidden, popsetHidden] = useState('hidden');
+ const[page,setpages] = useState(1);
+ const[loading,setloading] = useState(false)
 
   const api = async () => {
+   
     let res = await axios.get(
       'https://api.unsplash.com/photos/?client_id=slUx6qxOMpexd-Jt1Vhl0DHCTkL5glzI9DpDQd0lGBM'
     );
 
     console.log(res.data);
     setSearchData(res.data);
-  };
+
+  }
 
   const apiCall = async () => {
+ setloading(true)
     const result = await axios.get(
-      `${apiUrl}?query=${inputVal}&page=1&per_page=${pageSize}&client_id=${apiKey}`
+      `${apiUrl}?query=${inputVal}&page=${page}&per_page=${pageSize}&client_id=${apiKey}`
     );
     let c = result.data.results;
     setSearchData(c);
+    setloading(false)
+ 
   };
 
-  useEffect(() => {
-    apiCall();
-  }, [inputVal]);
+ useEffect(()=>{
+  setloading(true)
+apiCall()
+setloading(false)
+ },[page])
 
   useEffect(() => {
     api();
   }, []);
-
+useEffect(()=>{
+  setloading(true)
+apiCall()
+setloading(false)
+},[inputVal])
   return (
     <>
+ 
       <div className={`container ${hidden}`}>
         <h1>Image Search</h1>
         <div className="search-section">
@@ -75,7 +91,7 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal('Coding');
-              apiCall();
+              apiCall()
             }}
           >
             Coding
@@ -83,7 +99,8 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal('Pubg');
-              apiCall();
+              apiCall()
+            
             }}
           >
             Pubg
@@ -91,7 +108,8 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal('Nature');
-              apiCall();
+              apiCall()
+            
             }}
           >
             Nature
@@ -99,20 +117,23 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal('Birds');
-              apiCall();
+              apiCall()
+            
             }}
           >
             Birds
           </p>
         </div>
 
-        <div className="screen">
+
+
+   {loading?<Skeleton variant="rectangular" width={210} height={100} />: <div className="screen">
           {searchData &&
-            searchData.map((image) => {
+            searchData.map((image,index) => {
               return (
                 <div
                   className="display-info"
-                  key={image.id}
+                  key={index}
                   onClick={() => {
                     let im = image.urls.full;
                     setDiscription({
@@ -131,16 +152,16 @@ const HomePage = () => {
                 >
                   <div className="user-likes">
                     <div className="cnt1">
-                      <img src={image.urls.small} alt="" className="main-img" />
+  <img src={image.urls.small} alt="" className="main-img" />
                     </div>
                     <div className="cnt2">
                       <div className="username">
-                        <img
+                         <img
                           src={image.user.profile_image.small}
                           alt=""
                           className="profile-image"
                         />
-                        <div className="user-id">
+                      <div className="user-id">
                           <p>{`${image.user.first_name} ${image.user.last_name}`}</p>
                          {image.user.username&& <p className="user-id1">@{image.user.username}</p>}
                         </div>
@@ -156,7 +177,25 @@ const HomePage = () => {
                 </div>
               );
             })}
-        </div>
+        </div>}
+
+
+
+
+
+
+      <div className="next-prev-btn">
+        <p className='pags-btn' onClick={()=>{
+          if(page>1)
+          setpages(page-1)
+        }}>Prev Page</p>
+        <p className='pags-btn' onClick={()=>{
+          if(page>=1 && page<6){
+            setpages(page+1)
+          }
+        }}>Next Page</p>
+      </div>
+
       </div>
 
       <div className={`hidden-popup ${pophidden} `}>
@@ -170,7 +209,7 @@ const HomePage = () => {
           Close X
         </p>
         <div className="img-corner">
-          <img src={discription.imageUrl} alt="" className="hidden-main-img" />
+         {discription.imageUrl? <img src={discription.imageUrl} alt="" className="hidden-main-img" />:<Skeleton variant="rectangular" width={210} height={60} />}
         </div>
 
         <div className="user-details-handle">
@@ -212,7 +251,7 @@ const HomePage = () => {
             </a>
           </div>
         </div>
-      </div>
+      </div> 
     </>
   );
 };

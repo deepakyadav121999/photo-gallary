@@ -219,3 +219,17 @@ color: #949494;
   .user-id2{
     color: #949494;
   }
+  .next-prev-btn{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  .pags-btn{
+    padding: 10px;
+    background-color: #0074d9;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
