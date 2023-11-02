@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Styles/HomePage.css";
@@ -30,36 +31,49 @@ const HomePage = () => {
   const [page, setpages] = useState(1);
   const [loading, setloading] = useState(false);
 
-  const api = async () => {
-    let res = await axios.get(
-      "https://api.unsplash.com/photos/?client_id=slUx6qxOMpexd-Jt1Vhl0DHCTkL5glzI9DpDQd0lGBM"
-    );
 
-    console.log(res.data);
-    setSearchData(res.data);
-  };
 
-  const apiCall = async () => {
-    setloading(true);
+  const HandleSearch = async()=>{
+    setloading(true); 
+    setSearchData([]); 
     const result = await axios.get(
       `${apiUrl}?query=${inputVal}&page=${page}&per_page=${pageSize}&client_id=${apiKey}`
     );
     let c = result.data.results;
     setSearchData(c);
     setloading(false);
-  };
-
+  }
 
   useEffect(() => {
+    const apiCall = async () => {
+      setloading(true);
+      const result = await axios.get(
+        `${apiUrl}?query=${inputVal}&page=${page}&per_page=${pageSize}&client_id=${apiKey}`
+      );
+      let c = result.data.results;
+      setSearchData(c);
+      setloading(false);
+    };
+    apiCall();
+  // eslint-disable-next-line
+  }, [page]);
+
+  
+  //  console.log(searchData);
+  useEffect(() => {
+    const api = async () => {
+      let res = await axios.get(
+        "https://api.unsplash.com/photos/?client_id=slUx6qxOMpexd-Jt1Vhl0DHCTkL5glzI9DpDQd0lGBM"
+      );
+  
+      let x = res.data;
+      setSearchData(x);
+    };
     api();
-    
+
+  // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-  
-    apiCall();
-
-  }, [page]);
   return (
     <>
       <div className={`container ${hidden}`}>
@@ -73,7 +87,10 @@ const HomePage = () => {
               setInputVal(e.target.value);
             }}
           />
-          <p className="search-btn" onClick={apiCall}>
+          <p
+            className="search-btn"
+            onClick={HandleSearch}
+          >
             Search
           </p>
         </div>
@@ -82,7 +99,6 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal("Coding");
-            
             }}
           >
             Coding
@@ -90,7 +106,6 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal("Pubg");
-             
             }}
           >
             Pubg
@@ -98,7 +113,6 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal("Nature");
-            
             }}
           >
             Nature
@@ -106,7 +120,6 @@ const HomePage = () => {
           <p
             onClick={() => {
               setInputVal("Birds");
-             
             }}
           >
             Birds
@@ -114,74 +127,72 @@ const HomePage = () => {
         </div>
 
         <div className="screen">
-          {searchData &&
-            searchData.map((image) => {
-              return (
-                <div
-                  className="display-info"
-                 
-                  onClick={() => {
-                    let im = image.urls.full;
-                    setDiscription({
-                      imageUrl: im,
-                      dpUrl: image.user.profile_image.small,
-                      username: `${image.user.first_name} ${image.user.last_name}`,
-                      userId: image.user.username,
-                      likes: image.likes,
-                      instagram: image.user.social.instagram_username,
-                      twitter: image.user.social.twitter_username,
-                      downloadlink: image.links.download,
-                    });
-                    setHidden("hidden");
-                    popsetHidden("non-hidden");
-                  }}
-                >
-                  <div className="user-likes">
-                    <div className="cnt1">
-                      {loading ? (
-                        <Skeleton
-                          variant="rectangular"
-                          width={210}
-                          height={250}
-                        />
-                      ) : (
-                        <img
-                          src={image.urls.small}
-                          alt=""
-                          className="main-img"
-                        />
-                      )}
-                    </div>
-                    <div className="cnt2">
-                     
-                        <div className="username">
-                          <img
-                            src={image.user.profile_image.small}
-                            alt=""
-                            className="profile-image"
-                          />
-                          <div className="user-id">
-                            <p>{`${image.user.first_name} ${image.user.last_name}`}</p>
-                            {image.user.username && (
-                              <p className="user-id1">@{image.user.username}</p>
-                            )}
-                          </div>
-                        </div>
-                    
+          {searchData.map((image) => {
+            return (
+              <div
+                className="display-info"
+                onClick={() => {
+                  let im = image.urls.full;
+                  setDiscription({
+                    imageUrl: im,
+                    dpUrl: image.user.profile_image.small,
+                    username: `${image.user.first_name} ${image.user.last_name}`,
+                    userId: image.user.username,
+                    likes: image.likes,
+                    instagram: image.user.social.instagram_username,
+                    twitter: image.user.social.twitter_username,
+                    downloadlink: image.links.download,
+                  });
+                  setHidden("hidden");
+                  popsetHidden("non-hidden");
+                }}
+              >
+                <div className="user-likes">
+                  <div className="cnt1">
+                  {loading ? (
+ 
+  <Skeleton variant="rectangular" width={210} height={250} />
+) : (
+  
+  <img src={image.urls.small} alt="abc" className="main-img" />
+)}
 
-                   
-                        <div className="likes">
-                          <p>
-                            <BiSolidLike />
-                            {image.likes}
-                          </p>
-                        </div>
-                   
-                    </div>
                   </div>
+                  <div className="cnt2">
+  {loading ? (
+    <Skeleton variant="text" />
+  ) : (
+    <div className="username">
+      <img
+        src={image.user.profile_image.small}
+        alt=""
+        className="profile-image"
+      />
+      <div className="user-id">
+        <p>{`${image.user.first_name} ${image.user.last_name}`}</p>
+        {image.user.username && (
+          <p className="user-id1">@{image.user.username}</p>
+        )}
+      </div>
+    </div>
+  )}
+
+  <div className="likes">
+    {loading ? (
+      <Skeleton variant="text" />
+    ) : (
+      <p>
+        <BiSolidLike />
+        {image.likes}
+      </p>
+    )}
+  </div>
+</div>
+
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
 
         <div className="next-prev-btn">
